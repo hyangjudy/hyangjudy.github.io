@@ -1,0 +1,617 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PCDP in Java | hyangjudy's blog</title><meta name="description" content="My notes on Parallel, Concurrent, and Distributed Programming in Java Provided by Rice on Coursera"><meta name="keywords" content="Parallel,Concurrent,Distributed,Coursera"><meta name="author" content="hyangjudy"><meta name="copyright" content="hyangjudy"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="twitter:card" content="summary"><meta name="twitter:title" content="PCDP in Java"><meta name="twitter:description" content="My notes on Parallel, Concurrent, and Distributed Programming in Java Provided by Rice on Coursera"><meta name="twitter:image" content="https://hyangjudy.github.io/images/PCDPInJava/remote-method-invocation.png"><meta property="og:type" content="article"><meta property="og:title" content="PCDP in Java"><meta property="og:url" content="https://hyangjudy.github.io/2020/04/23/PCDPInJava/"><meta property="og:site_name" content="hyangjudy's blog"><meta property="og:description" content="My notes on Parallel, Concurrent, and Distributed Programming in Java Provided by Rice on Coursera"><meta property="og:image" content="https://hyangjudy.github.io/images/PCDPInJava/remote-method-invocation.png"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>var autoChangeMode = '1'
+var t = Cookies.get("theme")
+if (autoChangeMode == '1'){
+  var isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+  var isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+  var isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined){
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport){
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour < 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+  }
+  } else if (t == 'light') activateLightMode()
+  else activateDarkMode()
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="https://hyangjudy.github.io/2020/04/23/PCDPInJava/"><link rel="next" title="Hello World" href="https://hyangjudy.github.io/2020/04/21/hello-world/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  highlightCopy: true,
+  highlightLang: true,
+  highlightShrink: 'false',
+  isFontAwesomeV5: false,
+  isPhotoFigcaption: false
+  
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isSidebar: true  
+  }</script><noscript><style>
+#page-header {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><meta name="generator" content="Hexo 4.2.0"></head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.JPG" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">2</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">4</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">1</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div></div></div></div><i class="fa fa-arrow-right on" id="toggle-sidebar" aria-hidden="true">     </i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Parallel-Programming-in-Java"><span class="toc-number">1.</span> <span class="toc-text">Parallel Programming in Java</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Task-Parallelism"><span class="toc-number">1.1.</span> <span class="toc-text">Task Parallelism</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-Task-Creation-and-Termination-Async-Finish"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 Task Creation and Termination (Async, Finish)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-Creating-Tasks-in-Java’s-Fork-Join-Framework"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 Creating Tasks in Java’s Fork&#x2F;Join Framework</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-Amdahl’s-Law"><span class="toc-number">1.1.3.</span> <span class="toc-text">1.3 Amdahl’s Law</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Functional-Parallelism"><span class="toc-number">1.2.</span> <span class="toc-text">Functional Parallelism</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-Futures-Tasks-with-Return-Values"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 Futures: Tasks with Return Values</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-Futures-in-Java’s-Fork-Join-Framework"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 Futures in Java’s Fork&#x2F;Join Framework</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-Memoization"><span class="toc-number">1.2.3.</span> <span class="toc-text">2.3 Memoization</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-Java-Streams"><span class="toc-number">1.2.4.</span> <span class="toc-text">2.4 Java Streams</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-Data-Races-and-Determinism"><span class="toc-number">1.2.5.</span> <span class="toc-text">2.5 Data Races and Determinism</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Loop-Parallelism"><span class="toc-number">1.3.</span> <span class="toc-text">Loop Parallelism</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-Parallel-Loops"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1 Parallel Loops</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-Parallel-Matrix-Multiplication"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2 Parallel Matrix Multiplication</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-Barriers-in-Parallel-Loops"><span class="toc-number">1.3.3.</span> <span class="toc-text">3.3 Barriers in Parallel Loops</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-Iteration-Grouping-Chunking-in-Parallel-Loops"><span class="toc-number">1.3.4.</span> <span class="toc-text">3.4 Iteration Grouping&#x2F;Chunking in Parallel Loops</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Data-flow-Synchronization-and-Pipelining"><span class="toc-number">1.4.</span> <span class="toc-text">Data flow Synchronization and Pipelining</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-Split-phase-Barriers-with-Java-Phasers"><span class="toc-number">1.4.1.</span> <span class="toc-text">4.1 Split-phase Barriers with Java Phasers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-Point-to-Point-Sychronization-with-Phasers"><span class="toc-number">1.4.2.</span> <span class="toc-text">4.2 Point-to-Point Sychronization with Phasers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-One-Dimensional-Iterative-Averaging-with-Phasers"><span class="toc-number">1.4.3.</span> <span class="toc-text">4.3 One-Dimensional Iterative Averaging with Phasers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-4-Pipeline-Parallelism"><span class="toc-number">1.4.4.</span> <span class="toc-text">4.4 Pipeline Parallelism</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-5-Data-Flow-Parallelism"><span class="toc-number">1.4.5.</span> <span class="toc-text">4.5 Data Flow Parallelism</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#The-ForkJoinPool"><span class="toc-number">1.5.</span> <span class="toc-text">The ForkJoinPool</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Concurrent-Programming-in-Java"><span class="toc-number">2.</span> <span class="toc-text">Concurrent Programming in Java</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Threads-and-Locks"><span class="toc-number">2.1.</span> <span class="toc-text">Threads and Locks</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-Threads"><span class="toc-number">2.1.1.</span> <span class="toc-text">1.1 Threads</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-Structured-Locks"><span class="toc-number">2.1.2.</span> <span class="toc-text">1.2 Structured Locks</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-Unstructured-Locks"><span class="toc-number">2.1.3.</span> <span class="toc-text">1.3 Unstructured Locks</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-Liveness"><span class="toc-number">2.1.4.</span> <span class="toc-text">1.4 Liveness</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-5-Dining-Philosophers"><span class="toc-number">2.1.5.</span> <span class="toc-text">1.5 Dining Philosophers</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Critical-Sections-and-Isolation"><span class="toc-number">2.2.</span> <span class="toc-text">Critical Sections and Isolation</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-Critical-Sections"><span class="toc-number">2.2.1.</span> <span class="toc-text">2.1 Critical Sections</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-Object-Based-Isolation-Monitors"><span class="toc-number">2.2.2.</span> <span class="toc-text">2.2 Object Based Isolation (Monitors)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-Concurrent-Spanning-Tree-Algorithm"><span class="toc-number">2.2.3.</span> <span class="toc-text">2.3 Concurrent Spanning Tree Algorithm</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-Atomic-Variables"><span class="toc-number">2.2.4.</span> <span class="toc-text">2.4 Atomic Variables</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-Read-Write-Isolation"><span class="toc-number">2.2.5.</span> <span class="toc-text">2.5 Read, Write Isolation</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Actors"><span class="toc-number">2.3.</span> <span class="toc-text">Actors</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-Actors"><span class="toc-number">2.3.1.</span> <span class="toc-text">3.1 Actors</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-Actor-Examples"><span class="toc-number">2.3.2.</span> <span class="toc-text">3.2 Actor Examples</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-Sieve-of-Eratosthenes-Algorithm"><span class="toc-number">2.3.3.</span> <span class="toc-text">3.3 Sieve of Eratosthenes Algorithm</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-Producer-Consumer-Problem"><span class="toc-number">2.3.4.</span> <span class="toc-text">3.4 Producer-Consumer Problem</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-5-Bounded-Buffer-Producer-Consumer-Problem"><span class="toc-number">2.3.5.</span> <span class="toc-text">3.5 Bounded Buffer Producer-Consumer Problem</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Concurrent-Data-Structures"><span class="toc-number">2.4.</span> <span class="toc-text">Concurrent Data Structures</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-Optimistic-Concurrency"><span class="toc-number">2.4.1.</span> <span class="toc-text">4.1 Optimistic Concurrency</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-Concurrent-Queue"><span class="toc-number">2.4.2.</span> <span class="toc-text">4.2 Concurrent Queue</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-Linearizability"><span class="toc-number">2.4.3.</span> <span class="toc-text">4.3 Linearizability</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-4-Concurrent-Hash-Map"><span class="toc-number">2.4.4.</span> <span class="toc-text">4.4 Concurrent Hash Map</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Distributed-Programming-in-Java"><span class="toc-number">3.</span> <span class="toc-text">Distributed Programming in Java</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Distributed-Map-Reduce"><span class="toc-number">3.1.</span> <span class="toc-text">Distributed Map Reduce</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-Introduction-to-Map-Reduce"><span class="toc-number">3.1.1.</span> <span class="toc-text">1.1 Introduction to Map-Reduce</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-Hadoop-Framework"><span class="toc-number">3.1.2.</span> <span class="toc-text">1.2 Hadoop Framework</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-Spark-Framework"><span class="toc-number">3.1.3.</span> <span class="toc-text">1.3 Spark Framework</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-TF-IDF-Example"><span class="toc-number">3.1.4.</span> <span class="toc-text">1.4 TF-IDF Example</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-5-Page-Rank-Example"><span class="toc-number">3.1.5.</span> <span class="toc-text">1.5 Page Rank Example</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Client-server-Programming"><span class="toc-number">3.2.</span> <span class="toc-text">Client-server Programming</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-Introduction-to-Sockets"><span class="toc-number">3.2.1.</span> <span class="toc-text">2.1 Introduction to Sockets</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-Serialization-Deserialization"><span class="toc-number">3.2.2.</span> <span class="toc-text">2.2 Serialization&#x2F;Deserialization</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-Remote-Method-Invocation"><span class="toc-number">3.2.3.</span> <span class="toc-text">2.3 Remote Method Invocation</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-Multicast-Sockets"><span class="toc-number">3.2.4.</span> <span class="toc-text">2.4 Multicast Sockets</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-Publish-Subscribe-Model"><span class="toc-number">3.2.5.</span> <span class="toc-text">2.5 Publish-Subscribe Model</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Message-Passing"><span class="toc-number">3.3.</span> <span class="toc-text">Message Passing</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-Single-Program-Multiple-Data-SPMD-model"><span class="toc-number">3.3.1.</span> <span class="toc-text">3.1 Single Program Multiple Data (SPMD) model</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-Point-to-Point-Communication"><span class="toc-number">3.3.2.</span> <span class="toc-text">3.2 Point-to-Point Communication</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-Message-Ordering-and-Deadlock"><span class="toc-number">3.3.3.</span> <span class="toc-text">3.3 Message Ordering and Deadlock</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-Non-Blocking-Communications"><span class="toc-number">3.3.4.</span> <span class="toc-text">3.4 Non-Blocking Communications</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-5-Collective-Communication"><span class="toc-number">3.3.5.</span> <span class="toc-text">3.5 Collective Communication</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Combining-Distribution-And-Multi-threading"><span class="toc-number">3.4.</span> <span class="toc-text">Combining Distribution And Multi-threading</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-Processes-and-Threads"><span class="toc-number">3.4.1.</span> <span class="toc-text">4.1 Processes and Threads</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-Multithreaded-Servers"><span class="toc-number">3.4.2.</span> <span class="toc-text">4.2 Multithreaded Servers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-MPI-and-Threading"><span class="toc-number">3.4.3.</span> <span class="toc-text">4.3 MPI and Threading</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-4-Distributed-Actors"><span class="toc-number">3.4.4.</span> <span class="toc-text">4.4 Distributed Actors</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-5-Distributed-Reactive-Programming"><span class="toc-number">3.4.5.</span> <span class="toc-text">4.5 Distributed Reactive Programming</span></a></li></ol></li></ol></li></ol></div></div></div><div id="body-wrap"><div class="post-bg" id="nav" style="background-image: url(/images/PCDPInJava/remote-method-invocation.png)"><div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">hyangjudy's blog</a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span></span></div><div id="post-info"><div id="post-title"><div class="posttitle">PCDP in Java</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="Created 2020-04-23 20:34:37"><i class="fa fa-calendar" aria-hidden="true"></i> Created 2020-04-23</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="Updated 2020-04-23 21:24:36"><i class="fa fa-history" aria-hidden="true"></i> Updated 2020-04-23</span></time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Java/">Java</a></span></div><div class="meta-secondline"> </div><div class="meta-thirdline"><span class="post-meta-pv-cv"><i class="fa fa-eye post-meta__icon" aria-hidden="true"> </i><span>Post View:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-commentcount"></span></div></div></div></div><main class="layout_post" id="content-inner"><article id="post"><div id="article-container"><h2 id="Parallel-Programming-in-Java"><a href="#Parallel-Programming-in-Java" class="headerlink" title="Parallel Programming in Java"></a>Parallel Programming in Java</h2><h3 id="Task-Parallelism"><a href="#Task-Parallelism" class="headerlink" title="Task Parallelism"></a>Task Parallelism</h3><h4 id="1-1-Task-Creation-and-Termination-Async-Finish"><a href="#1-1-Task-Creation-and-Termination-Async-Finish" class="headerlink" title="1.1 Task Creation and Termination (Async, Finish)"></a>1.1 Task Creation and Termination (Async, Finish)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">S1;</span><br><span class="line">finish &#123;</span><br><span class="line">  async S2; &#x2F;&#x2F; asynchronously compute sum of the lower half of the array</span><br><span class="line">  S3; &#x2F;&#x2F; in parallel with S2</span><br><span class="line">&#125;</span><br><span class="line">S4;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-2-Creating-Tasks-in-Java’s-Fork-Join-Framework"><a href="#1-2-Creating-Tasks-in-Java’s-Fork-Join-Framework" class="headerlink" title="1.2 Creating Tasks in Java’s Fork/Join Framework"></a>1.2 Creating Tasks in Java’s Fork/Join Framework</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">S1;</span><br><span class="line">Fork S2;</span><br><span class="line">S3;</span><br><span class="line">Join S2;</span><br><span class="line">S4;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-3-Amdahl’s-Law"><a href="#1-3-Amdahl’s-Law" class="headerlink" title="1.3 Amdahl’s Law"></a>1.3 Amdahl’s Law</h4><p>speedup = 1 / ( 1-p + p/s )</p>
+<hr>
+<h3 id="Functional-Parallelism"><a href="#Functional-Parallelism" class="headerlink" title="Functional Parallelism"></a>Functional Parallelism</h3><h4 id="2-1-Futures-Tasks-with-Return-Values"><a href="#2-1-Futures-Tasks-with-Return-Values" class="headerlink" title="2.1 Futures: Tasks with Return Values"></a>2.1 Futures: Tasks with Return Values</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A &#x3D; future &#123; ⟨ task-with-return-value ⟩ &#125;  &#x2F;&#x2F; assigned a reference to a future object returned by a task of the form</span><br><span class="line">A.get()                                    &#x2F;&#x2F; the operation waits until the task has completed, and then propagates the task’s return value as the value returned by A.get()</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-Futures-in-Java’s-Fork-Join-Framework"><a href="#2-2-Futures-in-Java’s-Fork-Join-Framework" class="headerlink" title="2.2 Futures in Java’s Fork/Join Framework"></a>2.2 Futures in Java’s Fork/Join Framework</h4><ol>
+<li>A <code>Future</code> task extends the <code>RecursiveTask</code> class in the Fork/Join framework, instead of <code>RecursiveAction</code> as in regular tasks.</li>
+<li>The <code>compute()</code> method of a future task must have a non-void return type, whereas it has a void return type for regular tasks.</li>
+<li>A method call like <code>left.join()</code> waits for the task referred to by object left in both cases, but also provides the task’s return value in the case of future tasks.</li>
+</ol>
+<h4 id="2-3-Memoization"><a href="#2-3-Memoization" class="headerlink" title="2.3 Memoization"></a>2.3 Memoization</h4><p>In dynamic programming, the memoization pattern stores { (variables), (future task) } as a lookup table. If the future task exists, look it up and get the return value by <code>get()</code>. </p>
+<h4 id="2-4-Java-Streams"><a href="#2-4-Java-Streams" class="headerlink" title="2.4 Java Streams"></a>2.4 Java Streams</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">students.stream()</span><br><span class="line">  .filter(s -&gt; s.getStatus() &#x3D;&#x3D; Student.ACTIVE)</span><br><span class="line">  .mapToDouble(a -&gt; a.getAge())</span><br><span class="line">  .average()</span><br><span class="line">  .getAsDouble();</span><br></pre></td></tr></table></figure>
+<ul>
+<li>The pipeline can be made to execute in parallel by designating the source to be a parallel stream, i.e., by simply replacing <code>students.stream()</code> in the above code by <code>students.parallelStream()</code> or <code>Stream.of(students).parallel()</code>. </li>
+</ul>
+<h4 id="2-5-Data-Races-and-Determinism"><a href="#2-5-Data-Races-and-Determinism" class="headerlink" title="2.5 Data Races and Determinism"></a>2.5 Data Races and Determinism</h4><ul>
+<li>Determinism: <ul>
+<li>functional : same input -&gt; same output</li>
+<li>structural : same input -&gt; same competition graph</li>
+</ul>
+</li>
+<li>Data Races<ul>
+<li>Read-write</li>
+<li>Write-write</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="Loop-Parallelism"><a href="#Loop-Parallelism" class="headerlink" title="Loop Parallelism"></a>Loop Parallelism</h3><h4 id="3-1-Parallel-Loops"><a href="#3-1-Parallel-Loops" class="headerlink" title="3.1 Parallel Loops"></a>3.1 Parallel Loops</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">finish&#123;</span><br><span class="line">  for(p&#x3D;head;p!&#x3D;null;p&#x3D;p.next)&#123;</span><br><span class="line">    async&#123; compute(p) &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>e.g</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for(int i&#x3D;0;i&lt;n;i++)&#123;</span><br><span class="line">  A[i] &#x3D; B[i] + C[i]; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>to </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">IntStream.range(0, n).paralle().forEach(i -&gt; A[i] &#x3D; B[i] + C[i]);</span><br><span class="line">A &#x3D; IntStream.range(0, n).paralle().toArray(i -&gt; B[i] + C[i]);</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-Parallel-Matrix-Multiplication"><a href="#3-2-Parallel-Matrix-Multiplication" class="headerlink" title="3.2 Parallel Matrix Multiplication"></a>3.2 Parallel Matrix Multiplication</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">for(i : [0:n-1]) &#123;</span><br><span class="line">  for(j : [0:n-1]) &#123; c[i][j] &#x3D; 0;</span><br><span class="line">    for(k : [0:n-1]) &#123;</span><br><span class="line">      c[i][j] &#x3D; c[i][j] + a[i][k]*b[k][j]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>It is safe to convert for-i and for-j into forall loops, but for-k must remain a sequential loop to avoid data race.</p>
+<h4 id="3-3-Barriers-in-Parallel-Loops"><a href="#3-3-Barriers-in-Parallel-Loops" class="headerlink" title="3.3 Barriers in Parallel Loops"></a>3.3 Barriers in Parallel Loops</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">forall (i : [0:n-1]) &#123;</span><br><span class="line">  myId &#x3D; lookup(i); &#x2F;&#x2F; convert int to a string </span><br><span class="line">  print HELLO, myId;</span><br><span class="line">  &lt;barrier&gt;</span><br><span class="line">  print BYE, myId;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-4-Iteration-Grouping-Chunking-in-Parallel-Loops"><a href="#3-4-Iteration-Grouping-Chunking-in-Parallel-Loops" class="headerlink" title="3.4 Iteration Grouping/Chunking in Parallel Loops"></a>3.4 Iteration Grouping/Chunking in Parallel Loops</h4><p>Use grouping to reduce task number.</p>
+<hr>
+<h3 id="Data-flow-Synchronization-and-Pipelining"><a href="#Data-flow-Synchronization-and-Pipelining" class="headerlink" title="Data flow Synchronization and Pipelining"></a>Data flow Synchronization and Pipelining</h3><h4 id="4-1-Split-phase-Barriers-with-Java-Phasers"><a href="#4-1-Split-phase-Barriers-with-Java-Phasers" class="headerlink" title="4.1 Split-phase Barriers with Java Phasers"></a>4.1 Split-phase Barriers with Java Phasers</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Phaser ph &#x3D; new Phaser(n);</span><br><span class="line">&#x2F;&#x2F; Create forall loop with n iterations that operate on ph </span><br><span class="line">forall (i : [0:n-1]) &#123;</span><br><span class="line">  print HELLO, i;</span><br><span class="line">  int phase &#x3D; ph.arrive();</span><br><span class="line">  </span><br><span class="line">  myId &#x3D; lookup(i); &#x2F;&#x2F; convert int to a string</span><br><span class="line"></span><br><span class="line">  ph.awaitAdvance(phase);</span><br><span class="line">  print BYE, myId;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Doing so enables the barrier processing to occur in parallel with the call to lookup(i), which was our desired outcome.</p>
+<h4 id="4-2-Point-to-Point-Sychronization-with-Phasers"><a href="#4-2-Point-to-Point-Sychronization-with-Phasers" class="headerlink" title="4.2 Point-to-Point Sychronization with Phasers"></a>4.2 Point-to-Point Sychronization with Phasers</h4><table>
+<thead>
+<tr>
+<th>Task 1</th>
+<th>Task 2</th>
+<th>Task 3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>X=A() <em>//cost=1</em></td>
+<td>Y=B() <em>//cost=2</em></td>
+<td>Z=C() <em>//cost=3</em></td>
+</tr>
+<tr>
+<td>ph0.arrive()</td>
+<td>ph1.arrive()</td>
+<td>ph2.arrive()</td>
+</tr>
+<tr>
+<td>ph1.wait()</td>
+<td>ph0.wait(), ph2.wait()</td>
+<td>ph1.wait()</td>
+</tr>
+<tr>
+<td>D(X,Y) <em>//cost=3</em></td>
+<td>E(X,Y,Z) <em>//cost=2</em></td>
+<td>F(Y,Z) <em>//cost=1</em></td>
+</tr>
+</tbody></table>
+<p>Why use Phaser? Because we can split <code>ph.arriveAndAwaitAdvance()</code> into <code>arrive</code> and <code>await</code></p>
+<h4 id="4-3-One-Dimensional-Iterative-Averaging-with-Phasers"><a href="#4-3-One-Dimensional-Iterative-Averaging-with-Phasers" class="headerlink" title="4.3 One-Dimensional Iterative Averaging with Phasers"></a>4.3 One-Dimensional Iterative Averaging with Phasers</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Allocate array of phasers</span><br><span class="line">Phaser[] ph &#x3D; new Phaser[n+2]; &#x2F;&#x2F;array of phasers</span><br><span class="line">for (int i &#x3D; 0; i &lt; ph.length; i++) ph[i] &#x3D; new Phaser(1);</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Main computation </span><br><span class="line">forall ( i: [1:n-1]) &#123;</span><br><span class="line">  for (iter: [0:nsteps-1]) &#123;</span><br><span class="line">    newX[i] &#x3D; (oldX[i-1] + oldX[i+1]) &#x2F; 2;</span><br><span class="line">    ph[i].arrive();</span><br><span class="line">    </span><br><span class="line">    if (index &gt; 1) ph[i-1].awaitAdvance(iter);</span><br><span class="line">    if (index &lt; n-1) ph[i + 1].awaitAdvance(iter); </span><br><span class="line">    swap pointers newX and oldX;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-4-Pipeline-Parallelism"><a href="#4-4-Pipeline-Parallelism" class="headerlink" title="4.4 Pipeline Parallelism"></a>4.4 Pipeline Parallelism</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">while ( there is an input to be processed ) &#123;</span><br><span class="line">  &#x2F;&#x2F; wait for previous stage, if any </span><br><span class="line">  if (i &gt; 0) ph[i - 1].awaitAdvance(); </span><br><span class="line">  </span><br><span class="line">  process input;</span><br><span class="line">  </span><br><span class="line">  &#x2F;&#x2F; signal next stage</span><br><span class="line">  ph[i].arrive();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-5-Data-Flow-Parallelism"><a href="#4-5-Data-Flow-Parallelism" class="headerlink" title="4.5 Data Flow Parallelism"></a>4.5 Data Flow Parallelism</h4><p>A -&gt; C;<br>A, B -&gt; D;<br>B -&gt; E</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">async( () -&gt; &#123;&#x2F;* Task A *&#x2F;; &#125; ); &#x2F;&#x2F; Complete task and trigger event A</span><br><span class="line">async( () -&gt; &#123;&#x2F;* Task B *&#x2F;; &#125; ); &#x2F;&#x2F; Complete task and trigger event B</span><br><span class="line">asyncAwait(A, () -&gt; &#123;&#x2F;* Task C *&#x2F;&#125; );	    &#x2F;&#x2F; Only execute task after event A is triggered </span><br><span class="line">asyncAwait(A, B, () -&gt; &#123;&#x2F;* Task D *&#x2F;&#125; );	  &#x2F;&#x2F; Only execute task after events A, B are triggered </span><br><span class="line">asyncAwait(B, () -&gt; &#123;&#x2F;* Task E *&#x2F;&#125; );	    &#x2F;&#x2F; Only execute task after event B is triggered</span><br></pre></td></tr></table></figure>
+
+<h3 id="The-ForkJoinPool"><a href="#The-ForkJoinPool" class="headerlink" title="The ForkJoinPool"></a>The ForkJoinPool</h3><ul>
+<li>Use cases: good choice for computation-heavy, divide-and-conquer problems </li>
+<li><code>ForkJoinTask</code> is abstract: can be implemented by <code>RecurisiveAction</code> or <code>RecurisiveTask</code> </li>
+<li>Usages:<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>execute</td>
+<td>async execution, with no return value</td>
+</tr>
+<tr>
+<td>submit</td>
+<td>async execution, with a return value that can be retrieved by <code>task.get()</code></td>
+</tr>
+<tr>
+<td>invoke</td>
+<td>async execution, and the returned value will be obtained in the caller threads</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<hr>
+<h2 id="Concurrent-Programming-in-Java"><a href="#Concurrent-Programming-in-Java" class="headerlink" title="Concurrent Programming in Java"></a>Concurrent Programming in Java</h2><h3 id="Threads-and-Locks"><a href="#Threads-and-Locks" class="headerlink" title="Threads and Locks"></a>Threads and Locks</h3><h4 id="1-1-Threads"><a href="#1-1-Threads" class="headerlink" title="1.1 Threads"></a>1.1 Threads</h4><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Create a thread</td>
+<td><code>Thread t = new Thread();</code></td>
+</tr>
+<tr>
+<td>Start executing</td>
+<td><code>t.start();</code></td>
+</tr>
+<tr>
+<td>Join and wait</td>
+<td><code>t.join();</code></td>
+</tr>
+</tbody></table>
+<ul>
+<li>Threads provides a low-level function for parallelism</li>
+<li>Since there is no restriction on which thread can perform a join on which other thread, it is possible for a programmer to erroneously create a deadlock cycle with <code>join</code> operations.</li>
+</ul>
+<h4 id="1-2-Structured-Locks"><a href="#1-2-Structured-Locks" class="headerlink" title="1.2 Structured Locks"></a>1.2 Structured Locks</h4><ol>
+<li>Structured lock construct is responsible for both acquiring and releasing the lock that it works with..</li>
+<li>Structured locks can be used to enforce mutual exclusion and avoid data races;</li>
+<li>Structured locks are also referred to as intrinsic locks or monitors.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">inc()&#123;</span><br><span class="line">  synchronized(A)&#123; &#x2F;&#x2F; Acquire A</span><br><span class="line">    A.count +&#x3D; 1; </span><br><span class="line">  &#125; &#x2F;&#x2F; Release A</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">X &#123;buf, in, out&#125; &#x2F;&#x2F; A buffer with in and out pointers.</span><br><span class="line">insert(item)&#123;</span><br><span class="line">  synchronized(X)&#123;</span><br><span class="line">    wait if the buf is full</span><br><span class="line">    buf[in++] &#x3D; item</span><br><span class="line">    in++</span><br><span class="line">    notify remove</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">remove()&#123;</span><br><span class="line">  synchronized(X)&#123;</span><br><span class="line">    wait if the buf is empty</span><br><span class="line">    item &#x3D; buf[out];</span><br><span class="line">    out++;</span><br><span class="line">    return item;</span><br><span class="line">    notify insert</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h4 id="1-3-Unstructured-Locks"><a href="#1-3-Unstructured-Locks" class="headerlink" title="1.3 Unstructured Locks"></a>1.3 Unstructured Locks</h4><p>lock and unlock is decided on the programmer’s side. E.g. N1(L1) -&gt; N2(L2) -&gt; N3(L3) -&gt; N4</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">lock(L1)</span><br><span class="line">lock(L2)</span><br><span class="line">work w&#x2F;N1, N2</span><br><span class="line">unlock(L1)</span><br><span class="line">lock(L3)</span><br><span class="line">work w&#x2F;N2, N3</span><br><span class="line">unlock(L2)</span><br><span class="line">work w&#x2F;N3, N4</span><br><span class="line">unlock(L3)</span><br></pre></td></tr></table></figure>
+<ol>
+<li>Unstructured lock supports “hand-over-hand” locking.</li>
+<li>tryLock() will add more flexibility. If the lock cannot be acquired, the algorithm can do some other thing.</li>
+</ol>
+<p>Read-write lock:<br>Multiple threads are permitted to acquire a read lock, but only one thread is permitted to acquire a write lock.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Let&#39;s say there is an array. </span><br><span class="line">search(x)&#123;</span><br><span class="line">  readLock()</span><br><span class="line">  find array[i]&#x3D;&#x3D;x</span><br><span class="line">  unlock()</span><br><span class="line">&#125;</span><br><span class="line">update(i, y)&#123;</span><br><span class="line">  writeLock()</span><br><span class="line">  array[i]&#x3D;y</span><br><span class="line">  unlock()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-4-Liveness"><a href="#1-4-Liveness" class="headerlink" title="1.4 Liveness"></a>1.4 Liveness</h4><ol>
+<li>deadlock: two threads block each other<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">T1&#123;</span><br><span class="line">  sync(A)&#123;</span><br><span class="line">    sync(B)&#123;</span><br><span class="line">      ...</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">T2&#123;</span><br><span class="line">  sync(B)&#123;</span><br><span class="line">    sync(A)&#123;</span><br><span class="line">      ...</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>live lock: continue executon but no progress<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">mutable int x;</span><br><span class="line">T1&#123;</span><br><span class="line">  do&#123;</span><br><span class="line">    sync(x)&#123;</span><br><span class="line">      x.incr();</span><br><span class="line">      r &#x3D; x.get();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;while(x&lt;2)</span><br><span class="line">&#125;</span><br><span class="line">T2&#123;</span><br><span class="line">  do&#123;</span><br><span class="line">    sync(x)&#123;</span><br><span class="line">      x.decr();</span><br><span class="line">      r &#x3D; x.get();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;while(x&gt;-2)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>starvation</li>
+</ol>
+<p>Liveness refers to a progress guarantee, i.e, deadlock freedom, livelock freedom, and starvation freedom. </p>
+<h4 id="1-5-Dining-Philosophers"><a href="#1-5-Dining-Philosophers" class="headerlink" title="1.5 Dining Philosophers"></a>1.5 Dining Philosophers</h4><p>Some philosophers sit at a round table, and they will repeatly think, pick up chopsticks, eat, put down chopsticks. </p>
+<ol>
+<li><p>with structured lock</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">while(true)&#123;</span><br><span class="line">  think</span><br><span class="line">  sync(left)&#123;</span><br><span class="line">    sync(right)&#123;</span><br><span class="line">      eat</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>This implementaion will cause deadlock</p>
+</li>
+<li><p>with structured lock</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">while(true)&#123;</span><br><span class="line">  think</span><br><span class="line">  s1 &#x3D; tryLock(left)</span><br><span class="line">  if(!s1) continue</span><br><span class="line">  s2 &#x3D; tryLock(left)</span><br><span class="line">  if(!s2) continue</span><br><span class="line">  eat</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>There is no deadlock because we are using tryLock. But livelock is possible.</p>
+</li>
+<li><p>Solution:</p>
+<ol>
+<li>Modify and let at least one philosopher, E, pick up right first then left</li>
+<li>The philosophers that sit on odd seats pick up left first, while the ones that sit on even seats pick up right first.</li>
+<li>Only pick up both chopsticks when both are available</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h3 id="Critical-Sections-and-Isolation"><a href="#Critical-Sections-and-Isolation" class="headerlink" title="Critical Sections and Isolation"></a>Critical Sections and Isolation</h3><h4 id="2-1-Critical-Sections"><a href="#2-1-Critical-Sections" class="headerlink" title="2.1 Critical Sections"></a>2.1 Critical Sections</h4><p>Use isolate to denote critical sections</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;I transfer money via the family account to daughter</span><br><span class="line">T1&#123;</span><br><span class="line">  isolated&#123;</span><br><span class="line">    myBalance -&#x3D; 100;</span><br><span class="line">    familyBalance +&#x3D; 100; </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">T2&#123;</span><br><span class="line">  isolated&#123;</span><br><span class="line">    familyBalance -&#x3D; 100; </span><br><span class="line">    daughterBalance +&#x3D; 100;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-Object-Based-Isolation-Monitors"><a href="#2-2-Object-Based-Isolation-Monitors" class="headerlink" title="2.2 Object Based Isolation (Monitors)"></a>2.2 Object Based Isolation (Monitors)</h4><p>A linked list</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">delete(cur)&#123;</span><br><span class="line">  isolated(cur, cur.prev, cur.next)&#123;</span><br><span class="line">    cur.prev.next &#x3D; cur.next;</span><br><span class="line">    cur.next.prev &#x3D; cur.prev;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The relationship between object-based isolation and monitors is that all methods in a monitor object, M1, are executed as object-based isolated constructs with a singleton object set, {M1}. Similarly, all methods in a monitor object, M2, are executed as object-based isolated constructs with a singleton object set, {M2} which has an empty intersection with {M1}.</p>
+<h4 id="2-3-Concurrent-Spanning-Tree-Algorithm"><a href="#2-3-Concurrent-Spanning-Tree-Algorithm" class="headerlink" title="2.3 Concurrent Spanning Tree Algorithm"></a>2.3 Concurrent Spanning Tree Algorithm</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">compute(v)&#123; &#x2F;&#x2F;parallelize the spanning tree computation</span><br><span class="line">  for each neighbor c of v&#123;</span><br><span class="line">    s &lt;- makeParent(v, c)</span><br><span class="line">    if(s)&#123;</span><br><span class="line">      compute(c)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">makeParent(v, c)&#123;</span><br><span class="line">  isolated(c)&#123; &#x2F;&#x2F; call MakeParent(v1, c) and MakeParent(v2, c) on the same vertex c at the same time</span><br><span class="line">    if(c.parent&#x3D;&#x3D;null)&#123;</span><br><span class="line">      c.parent &#x3D; v</span><br><span class="line">      return true; </span><br><span class="line">    &#125;else&#123;</span><br><span class="line">      return false;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-4-Atomic-Variables"><a href="#2-4-Atomic-Variables" class="headerlink" title="2.4 Atomic Variables"></a>2.4 Atomic Variables</h4><p>A shared value like <code>cur</code> performs <code>cur = cur + 1</code>. It can be replaced by an atomic integer:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AtomicInteger cur &#x3D; new AtomicInteger();</span><br><span class="line">cur.getAndAdd(1); &#x2F;&#x2F; more efficiently</span><br></pre></td></tr></table></figure>
+
+<p>Atomic reference uses compareAndSet</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AtomicReference ref &#x3D; new AtomicReference();</span><br><span class="line">ref.compareAndSet(expected, new);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">compareAndSet(expected, new)&#123;</span><br><span class="line">  isolated(this)&#123;</span><br><span class="line">    if(this.value &#x3D;&#x3D; expected)&#123;</span><br><span class="line">      this.value &#x3D; new</span><br><span class="line">      return true</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">      return false</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-5-Read-Write-Isolation"><a href="#2-5-Read-Write-Isolation" class="headerlink" title="2.5 Read, Write Isolation"></a>2.5 Read, Write Isolation</h4><p>The main idea behind read-write isolation is to separate read accesses to shared objects from write accesses.</p>
+<hr>
+<h3 id="Actors"><a href="#Actors" class="headerlink" title="Actors"></a>Actors</h3><h4 id="3-1-Actors"><a href="#3-1-Actors" class="headerlink" title="3.1 Actors"></a>3.1 Actors</h4><p>An Actor uses object-based isolation. It forces all accesses to an object to be isolated by default.</p>
+<table>
+<thead>
+<tr>
+<th>Actor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Mailbox</td>
+</tr>
+<tr>
+<td>Methods</td>
+</tr>
+<tr>
+<td>Local State</td>
+</tr>
+</tbody></table>
+<p>The Actor model is reactive. It means actors can only execute methods in response to messages; these methods can read/write local state and/or send messages to other actors.</p>
+<p>Thus, the only way to modify an object in a pure actor model is to send messages to the actor that owns that object as part of its local state. In general, messages sent to actors from different actors can be arbitrarily reordered in the system. However, in many actor models, messages sent between the same pair of actors preserve the order in which they are sent </p>
+<h4 id="3-2-Actor-Examples"><a href="#3-2-Actor-Examples" class="headerlink" title="3.2 Actor Examples"></a>3.2 Actor Examples</h4><p>A pipeline checks if the word consists of all lower-case characters, and then checks if the word is even length.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">process(s)&#123; &#x2F;&#x2F; y: checks if the word consists of all lower-case characters</span><br><span class="line">  if(s is lower case)&#123;</span><br><span class="line">    y.send(s)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">process(s)&#123; &#x2F;&#x2F; z: checks if the word is even length</span><br><span class="line">  if(s is even length)&#123;</span><br><span class="line">    z.send(s)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-3-Sieve-of-Eratosthenes-Algorithm"><a href="#3-3-Sieve-of-Eratosthenes-Algorithm" class="headerlink" title="3.3 Sieve of Eratosthenes Algorithm"></a>3.3 Sieve of Eratosthenes Algorithm</h4><p>To implement the Sieve of Eratosthenes, we implement a actor pipeline:</p>
+<p>Non-Mul-2 -&gt; Non-Mul-3 -&gt; Non-Mul-5 -&gt; Non-Mul-7 -&gt; …</p>
+<p>A Java code sketch for the process() method for an actor responsible for filtering out multiples of the actor’s “local prime” in the Sieve of Eratosthenes is as follows:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public void process(final Object msg) &#123;</span><br><span class="line">  int candidate &#x3D; (Integer) msg;</span><br><span class="line">  &#x2F;&#x2F; Check if the candidate is a non-multiple of the &quot;local prime&quot;.</span><br><span class="line">  &#x2F;&#x2F; For example, localPrime &#x3D; 2 in the Non-Mul-2 actor</span><br><span class="line">  boolean nonMul &#x3D; ((candidate % localPrime) !&#x3D; 0);</span><br><span class="line">  &#x2F;&#x2F; nothing needs to be done if nonMul &#x3D; false</span><br><span class="line">  if (nonMul) &#123;</span><br><span class="line">    if (nextActor &#x3D;&#x3D; null) &#123; </span><br><span class="line">      . . . &#x2F;&#x2F; create &amp; start new actor with candidate as its local prime</span><br><span class="line">    &#125;</span><br><span class="line">    else nextActor.send(msg); &#x2F;&#x2F; forward message to next actor</span><br><span class="line">  &#125; </span><br><span class="line">&#125; &#x2F;&#x2F; process</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-4-Producer-Consumer-Problem"><a href="#3-4-Producer-Consumer-Problem" class="headerlink" title="3.4 Producer-Consumer Problem"></a>3.4 Producer-Consumer Problem</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">comsumer-thread()&#123;</span><br><span class="line">  while(buffer is empty) &#123;&#125;  &#x2F;&#x2F; wait</span><br><span class="line">  process the item removed from buffer</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>If solve this problem by using locks with wait-notify operations or by using object-based isolation, both approaches will require low-level concurrent programming techniques to ensure correctness and maximum performance. </p>
+<p>However, we can do it using Actor</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">comsumer-actor()&#123;</span><br><span class="line">  process(s)&#123;</span><br><span class="line">    process the item removed from buffer</span><br><span class="line">    tell the buffer that it is ready</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-5-Bounded-Buffer-Producer-Consumer-Problem"><a href="#3-5-Bounded-Buffer-Producer-Consumer-Problem" class="headerlink" title="3.5 Bounded Buffer Producer-Consumer Problem"></a>3.5 Bounded Buffer Producer-Consumer Problem</h4><p><img src="/" class="lazyload" data-src="/images/PCDPInJava/bounded-buffer.png"  alt="bounded-buffer"></p>
+<hr>
+<h3 id="Concurrent-Data-Structures"><a href="#Concurrent-Data-Structures" class="headerlink" title="Concurrent Data Structures"></a>Concurrent Data Structures</h3><h4 id="4-1-Optimistic-Concurrency"><a href="#4-1-Optimistic-Concurrency" class="headerlink" title="4.1 Optimistic Concurrency"></a>4.1 Optimistic Concurrency</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Atomic Integer&#123;</span><br><span class="line">  get();</span><br><span class="line">  set();</span><br><span class="line">  compareAndSet();</span><br><span class="line">  getAndAdd(delta)&#123;</span><br><span class="line">    while(true)&#123;</span><br><span class="line">      curr &#x3D; this.get();</span><br><span class="line">      next &#x3D; curr + delta;</span><br><span class="line">      this.set(next);</span><br><span class="line">      if(this.compareAndSet(curr, next))&#123;</span><br><span class="line">        return curr;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>no deadlock because there is no blocking </li>
+<li>no livelock because one eventually makes progress</li>
+</ol>
+<h4 id="4-2-Concurrent-Queue"><a href="#4-2-Concurrent-Queue" class="headerlink" title="4.2 Concurrent Queue"></a>4.2 Concurrent Queue</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Queue&#123;</span><br><span class="line">  enq(x)&#123;</span><br><span class="line">    tail.next &#x3D; x;</span><br><span class="line">    tail &#x3D; x;</span><br><span class="line">  &#125;</span><br><span class="line">  deq()&#123;</span><br><span class="line">    if(empty) throw Exception;</span><br><span class="line">    r &#x3D; head;</span><br><span class="line">    head &#x3D; head.next;</span><br><span class="line">    return r;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Make queue to be more friendly in multi-threaded situations.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Queue&#123;</span><br><span class="line">  enq(x)&#123;</span><br><span class="line">    tail.next.compareAndSet()</span><br><span class="line">    tail &#x3D; x;</span><br><span class="line">  &#125;</span><br><span class="line">  deq()&#123;</span><br><span class="line">    if(empty) throw Exception;</span><br><span class="line">    r &#x3D; head;</span><br><span class="line">    head &#x3D; head.next;</span><br><span class="line">    return r;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-3-Linearizability"><a href="#4-3-Linearizability" class="headerlink" title="4.3 Linearizability"></a>4.3 Linearizability</h4><ol>
+<li>When the value is written, all reads will return the modified value</li>
+<li>Read will return the value that is got between request and response.</li>
+</ol>
+<h4 id="4-4-Concurrent-Hash-Map"><a href="#4-4-Concurrent-Hash-Map" class="headerlink" title="4.4 Concurrent Hash Map"></a>4.4 Concurrent Hash Map</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ConcurrentHashMap&#123;</span><br><span class="line">  get(key); &#x2F;&#x2F; linearizable</span><br><span class="line">  put(key, value); &#x2F;&#x2F; linearizable</span><br><span class="line">  putIfAbsent(key, value); &#x2F;&#x2F; linearizable</span><br><span class="line">  clear(); &#x2F;&#x2F; not linearizable</span><br><span class="line">  putAll(); &#x2F;&#x2F; not linearizable</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Distributed-Programming-in-Java"><a href="#Distributed-Programming-in-Java" class="headerlink" title="Distributed Programming in Java"></a>Distributed Programming in Java</h2><h3 id="Distributed-Map-Reduce"><a href="#Distributed-Map-Reduce" class="headerlink" title="Distributed Map Reduce"></a>Distributed Map Reduce</h3><h4 id="1-1-Introduction-to-Map-Reduce"><a href="#1-1-Introduction-to-Map-Reduce" class="headerlink" title="1.1 Introduction to Map-Reduce"></a>1.1 Introduction to Map-Reduce</h4><ol>
+<li>Map:<br><code>(KA,VA) -&gt; (KA1, VA1), (KA2, VA2)</code>;<br><code>(KB,VB) -&gt; (KB1, VB1), (KB2, VB2)</code></li>
+<li>Group the same intermediate key: if <code>KA1=KB1=K</code>, then we have <code>(K, (VA1,VB1))</code></li>
+<li>Reduce: <code>G</code> is a user-specified funciton, <code>(K, G(VA1,VB1))</code></li>
+</ol>
+<h4 id="1-2-Hadoop-Framework"><a href="#1-2-Hadoop-Framework" class="headerlink" title="1.2 Hadoop Framework"></a>1.2 Hadoop Framework</h4><p>Apache Hadoop implements distributed Map-Reduce.<br>A distributed computer can be viewed as a large set of multicore computers connected by a network, such that each computer has multiple processor cores. Each computer has some storage.</p>
+<p>Hadoop allows the programmer to specify map and reduce functions in Java, and takes care of all the details of generating a large number of map tasks and reduce tasks to perform the computation as well as scheduling them across a distributed computer.<br>Hadoop is fault tolerant in that if a node fails, the task can be re-executed with the same input elsewhere.</p>
+<p>Hive and Pig (query language) can perform word-count.<br>The input K-V pairs distribute among computers,<br>map them to intermediate key-value pairs,<br>group by intermediate key,<br>and sreduce.</p>
+<h4 id="1-3-Spark-Framework"><a href="#1-3-Spark-Framework" class="headerlink" title="1.3 Spark Framework"></a>1.3 Spark Framework</h4><table>
+<thead>
+<tr>
+<th>Hadoop</th>
+<th>Spark</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>The computers in the distributed computer use memory just to stream data from disks, perform map or reduce operations, stream the data back to the disk</td>
+<td>The computers in the distributed computer use memory as data buffer and perform computation on them</td>
+</tr>
+<tr>
+<td>K-V pairs</td>
+<td>resilient distributed datasets</td>
+</tr>
+<tr>
+<td>Map-reduce</td>
+<td>More operations: transforms (intermediate operations), like map, filter, join…; actions  (terminal operations), like reduce, collect…</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>Spark has two innovations:</p>
+<ol>
+<li>lazy evaluation: don’t need to schedule intermediate operations until you know what the terminal operations</li>
+<li>caching in memory: read and write data from memory -&gt; faster</li>
+</ol>
+</li>
+<li><p>Word-count example:</p>
+<ol>
+<li>sc = new JavaSpackContext();</li>
+<li>input = sc.textFile(inputPath);</li>
+<li>words = input.flatMap(line -&gt; line.split(“ “));</li>
+<li>pairs = words.mapToPair(word -&gt; new Tuple2&lt;String, Integer&gt;(word, 1));</li>
+<li>counts = pairs.reduceByKey((a,b)-&gt;a+b);</li>
+</ol>
+</li>
+</ul>
+<h4 id="1-4-TF-IDF-Example"><a href="#1-4-TF-IDF-Example" class="headerlink" title="1.4 TF-IDF Example"></a>1.4 TF-IDF Example</h4><p>Term Frequency – Inverse Document Frequency: to identify documents that are most similar to each other within a large corpus.<br>| | D<sub>1</sub> | D<sub>2</sub> | … | D<sub>N</sub> | DF |<br>| - | - | - | - | - | - |<br>| Term<sub>1</sub> | TF<sub>1,1</sub> |  TF<sub>1,2</sub> |   |  TF<sub>1,N</sub> | DF<sub>1</sub> |<br>| Term<sub>2</sub> | TF<sub>2,1</sub> |  TF<sub>2,2</sub> |   |  TF<sub>2,N</sub> | DF<sub>2</sub> |</p>
+<ul>
+<li>TF<sub>i,j</sub> - term frequency: Term<sub>i</sub> frequency in D<sub>j</sub></li>
+<li>DF<sub>i</sub> - document frequency: the count of Term<sub>i</sub> in documents</li>
+<li>IDF - inverse document frequency: N/DF</li>
+<li>weight of Term<sub>i</sub> in D<sub>j</sub> = TF<sub>i,j</sub> * log( N/DF<sub>i</sub> )</li>
+</ul>
+<p>Calculate using Hadoop:</p>
+<ul>
+<li>input: (document, {terms})</li>
+<li>map: (document, {terms}) -&gt; ((document, term), 1)</li>
+<li>reduce: ((document, term), TF)</li>
+<li>map: ((document, term), TF) -&gt; (term, 1)</li>
+<li>reduce: (term, DF)</li>
+</ul>
+<h4 id="1-5-Page-Rank-Example"><a href="#1-5-Page-Rank-Example" class="headerlink" title="1.5 Page Rank Example"></a>1.5 Page Rank Example</h4><p><img src="/" class="lazyload" data-src="/images/PCDPInJava/page-rank.png"  alt="page-rank"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">for (iter&#x3D;...) &#123;</span><br><span class="line">  1)  for each page A -&gt; B&#123;</span><br><span class="line">        contribs(B) +&#x3D; rank(A)&#x2F;dest_count(A)</span><br><span class="line">      &#125;</span><br><span class="line">  2)  for each page B&#123;</span><br><span class="line">        rank(B) &#x3D; 0.15 + 0.85 * contribs(B)</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Calculate using Spark:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">contribs &#x3D; links.join(ranks).values()</span><br><span class="line">           .flatMapToPair(dest -&gt; (dest, rank(src)&#x2F;destcount);</span><br><span class="line">ranks &#x3D; contribs.reduceByKey(new Sum())</span><br><span class="line">        .mapValues(sum -&gt; 0.15 + sum * 0.85);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="Client-server-Programming"><a href="#Client-server-Programming" class="headerlink" title="Client-server Programming"></a>Client-server Programming</h3><h4 id="2-1-Introduction-to-Sockets"><a href="#2-1-Introduction-to-Sockets" class="headerlink" title="2.1 Introduction to Sockets"></a>2.1 Introduction to Sockets</h4><p>Client-server programming is typically used for building distributed applications with small numbers of processes.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Get communications on JVM A and JVM B:s</span><br><span class="line">bSocket &#x3D; new ServerSocket(port);</span><br><span class="line">a &#x3D; bSocket.accpet(); &#x2F;&#x2F; a refers to the client socket from JVM A</span><br><span class="line">a.getInputStream(); &#x2F;&#x2F; read</span><br><span class="line">a.getOutputStream(); &#x2F;&#x2F; write</span><br><span class="line"></span><br><span class="line">aSocket &#x3D; new Socket(port);</span><br><span class="line">aSocket.getInputStream(); &#x2F;&#x2F; read</span><br><span class="line">aSocket.getOutputStream(); &#x2F;&#x2F; write</span><br></pre></td></tr></table></figure>
+<p>Sockets logically connect two JVMs, but what actually happens physically is that the message has to go through the network from the client to the server and the server to the client. </p>
+<h4 id="2-2-Serialization-Deserialization"><a href="#2-2-Serialization-Deserialization" class="headerlink" title="2.2 Serialization/Deserialization"></a>2.2 Serialization/Deserialization</h4><p>Serialization: objects to bytes</p>
+<p>Solutions: </p>
+<ol>
+<li>Custom serialization/deserialization</li>
+<li>XML</li>
+<li>Java serialization/deserialization <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class X implements Serializable</span><br></pre></td></tr></table></figure>
+ Transient: annotate fields should not be copied</li>
+<li>IDL(interface definition language)<ul>
+<li>instance: protocal buffer</li>
+<li>pros: communicate not just in Java, but in other languages like Python</li>
+<li>cons: programmers have to define the interface in <code>.proto</code></li>
+</ul>
+</li>
+</ol>
+<h4 id="2-3-Remote-Method-Invocation"><a href="#2-3-Remote-Method-Invocation" class="headerlink" title="2.3 Remote Method Invocation"></a>2.3 Remote Method Invocation</h4><p>Thread on JVM A wants to call method of object x on JVM B, and get a return value y.<br><img src="/" class="lazyload" data-src="/images/PCDPInJava/remote-method-invocation.png"  alt="remote-method-invocation"><br>Both x and y should be serialiable. Object x must be included in the RMI registry, so that it can be accessed through a global name rather than a local object reference.</p>
+<p>In summary, a key advantage of RMI is that, once this setup in place, method invocations across distributed processes can be implemented almost as simply as standard method invocations. </p>
+<h4 id="2-4-Multicast-Sockets"><a href="#2-4-Multicast-Sockets" class="headerlink" title="2.4 Multicast Sockets"></a>2.4 Multicast Sockets</h4><table>
+<thead>
+<tr>
+<th>Unicast</th>
+<th>Broadcast</th>
+<th>Multicast</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>src sends message to dest through routers</td>
+<td>src sends message to a router, and to all dests that are connected to the router in the local network</td>
+<td>src sends message to multiple dests through cloud</td>
+</tr>
+<tr>
+<td>single destination, point-to-point communication</td>
+<td>multiple destination, in local network</td>
+<td>multiple destination, through cloud/Internet</td>
+</tr>
+</tbody></table>
+<p>In Java</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">s &#x3D; new MulticastSocket(port);</span><br><span class="line">s.joinGroup(g);</span><br><span class="line">message &#x3D; new DatagramPacket(); &#x2F;&#x2F; create a message</span><br><span class="line">s.send(message); &#x2F;&#x2F; send it to the group</span><br><span class="line">message2 &#x3D; new DatagramPacket(); &#x2F;&#x2F; a buffer for receiving the message</span><br><span class="line">s.receive(message2);</span><br><span class="line">s.leaveGroup(g);</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-5-Publish-Subscribe-Model"><a href="#2-5-Publish-Subscribe-Model" class="headerlink" title="2.5 Publish-Subscribe Model"></a>2.5 Publish-Subscribe Model</h4><p>We have some producers and consumers. Producers send messages to topics, while consumers read messages from topics. Topics work as a broker, which producers publish messages to and consumers poll messages from.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;producer</span><br><span class="line">p &#x3D; new KafkaProducer();</span><br><span class="line">p.send(new ProducerRecord(topic, key, value));</span><br><span class="line">p.close();</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;comsumer</span><br><span class="line">c &#x3D; new KafkaConsumer();</span><br><span class="line">c.subsribe(topic);</span><br><span class="line">c.poll(timeout);</span><br><span class="line">for(each r : records)&#123;</span><br><span class="line">    r.offset, r.key, r.value</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="Message-Passing"><a href="#Message-Passing" class="headerlink" title="Message Passing"></a>Message Passing</h3><h4 id="3-1-Single-Program-Multiple-Data-SPMD-model"><a href="#3-1-Single-Program-Multiple-Data-SPMD-model" class="headerlink" title="3.1 Single Program Multiple Data (SPMD) model"></a>3.1 Single Program Multiple Data (SPMD) model</h4><p>Different nodes work on different local elements of a global variable. The interface available is MPI (Message passing interface)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; global view: XG, local view: XL</span><br><span class="line">main()&#123;</span><br><span class="line">  MPI.init()</span><br><span class="line">  for(i : ...)&#123;</span><br><span class="line">    XL[i] &#x3D; XL.length * rank() + i</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-Point-to-Point-Communication"><a href="#3-2-Point-to-Point-Communication" class="headerlink" title="3.2 Point-to-Point Communication"></a>3.2 Point-to-Point Communication</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; In rank0, s&#x3D;&quot;ABCD&quot; and send s to rank1</span><br><span class="line">&#x2F;&#x2F; In rank1, allocate buffer, and receive into buffer from rank 0, then print buffer</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">main()&#123;</span><br><span class="line">  MPI.init()</span><br><span class="line">  if(rank&#x3D;&#x3D;0)&#123;</span><br><span class="line">    s&#x3D;&quot;ABCD&quot;</span><br><span class="line">    MPI.send(s, 0, s.length, &#x2F;&#x2F; message, start index, end index</span><br><span class="line">            MPI.CHAR, 1, 99) &#x2F;&#x2F; type of message, receiver rank, message tag (differentiate messages from the same sender and the same receiver)</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    buf &#x3D; new char[4]</span><br><span class="line">    MPI.recv(buf, 0, buf.length, MPI.CHAR, 0, 99)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>If sending objects, the object has to implement Serializable</p>
+<h4 id="3-3-Message-Ordering-and-Deadlock"><a href="#3-3-Message-Ordering-and-Deadlock" class="headerlink" title="3.3 Message Ordering and Deadlock"></a>3.3 Message Ordering and Deadlock</h4><table>
+<thead>
+<tr>
+<th>R0</th>
+<th>R1</th>
+<th>R2</th>
+<th>R3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>R0 wants to receive message from R1</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>R1 wants to send message to R0</td>
+<td></td>
+<td>R2 wants to send message to R3</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>R3 wants to receive message from R2</td>
+</tr>
+</tbody></table>
+<p>The same order is only guaranteed if the sender, the receiver, the data type and the tag is the same for two messages. In this case, the order of R0 receiving or R3 receiving message is not guaranteed.</p>
+<table>
+<thead>
+<tr>
+<th>R0</th>
+<th>R1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>send x to R1</td>
+<td>send y to R0</td>
+</tr>
+<tr>
+<td>receive y from R1</td>
+<td>receive x from  R0</td>
+</tr>
+</tbody></table>
+<p>Send and receive in MPI are blocking operations. In this case, <code>send x to R1</code> will wait until a receive is detected.</p>
+<ul>
+<li><p>Solution 1:</p>
+<table>
+<thead>
+<tr>
+<th>R0</th>
+<th>R1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>send x to R1</td>
+<td>receive x from  R0</td>
+</tr>
+<tr>
+<td>receive y from R1</td>
+<td>send y to R0</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>Solution 2: the API will avoid deadlock by single send or receive</p>
+<table>
+<thead>
+<tr>
+<th>R0</th>
+<th>R1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>sendrecv(x)</td>
+<td>sendrecv(y)</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h4 id="3-4-Non-Blocking-Communications"><a href="#3-4-Non-Blocking-Communications" class="headerlink" title="3.4 Non-Blocking Communications"></a>3.4 Non-Blocking Communications</h4><p>Benefits: avoid idle time between blocking <code>send</code> and <code>recv</code></p>
+<table>
+<thead>
+<tr>
+<th>R0</th>
+<th>R1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S1: req0 = isend</td>
+<td>S2: req1 = irecv</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>S4</td>
+</tr>
+<tr>
+<td>wait(req0)</td>
+<td>wait(req1)</td>
+</tr>
+<tr>
+<td>S5</td>
+<td>S6</td>
+</tr>
+</tbody></table>
+<p>Other operations: <code>waitAll</code> and <code>waitAny</code> </p>
+<h4 id="3-5-Collective-Communication"><a href="#3-5-Collective-Communication" class="headerlink" title="3.5 Collective Communication"></a>3.5 Collective Communication</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">main()&#123;</span><br><span class="line">  MPI.init()</span><br><span class="line">  int x[] &#x3D; ...</span><br><span class="line">  if(rank&#x3D;&#x3D;0) x[0] &#x3D; 10</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; R0 send x[0] to all the other nodes</span><br><span class="line">  bcast(x, 0, 1, &#x2F;&#x2F; data, start index, end index</span><br><span class="line">       MPI.INT, 0) &#x2F;&#x2F; data type, root</span><br><span class="line">  print rank, x[0]</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; R2 computes the sum of y and store the result in z</span><br><span class="line">  reduce(y, 0, &#x2F;&#x2F; input, offset, </span><br><span class="line">         z, 0, &#x2F;&#x2F; dest, offset, </span><br><span class="line">         1, &#x2F;&#x2F; the size of input and output</span><br><span class="line">         MPI.INT, 2) &#x2F;&#x2F; data type, root</span><br><span class="line">  if(rank&#x3D;&#x3D;2)&#123;</span><br><span class="line">    print z[0]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="Combining-Distribution-And-Multi-threading"><a href="#Combining-Distribution-And-Multi-threading" class="headerlink" title="Combining Distribution And Multi-threading"></a>Combining Distribution And Multi-threading</h3><h4 id="4-1-Processes-and-Threads"><a href="#4-1-Processes-and-Threads" class="headerlink" title="4.1 Processes and Threads"></a>4.1 Processes and Threads</h4><table>
+<thead>
+<tr>
+<th>Multiple threads in a process</th>
+<th>Multiple processes in a node</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>memory or resource efficiency, due to sharing</td>
+<td>responsiveness to, for example, JVM delays</td>
+</tr>
+<tr>
+<td>responsiveness to network delays</td>
+<td>scalability (improve throughput)</td>
+</tr>
+<tr>
+<td>performance</td>
+<td>availability (also referred to as resilience)</td>
+</tr>
+</tbody></table>
+<h4 id="4-2-Multithreaded-Servers"><a href="#4-2-Multithreaded-Servers" class="headerlink" title="4.2 Multithreaded Servers"></a>4.2 Multithreaded Servers</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">listener &#x3D; new ServerSocket(…);</span><br><span class="line">while(true)&#123;</span><br><span class="line">   s &#x3D; listener.accept(…);                     &#x2F;&#x2F; A</span><br><span class="line">   t &#x3D; new Thread( () -&gt; &#123; &#x2F;&#x2F; the next request</span><br><span class="line">can start immediately thereafter</span><br><span class="line">      read file request from s.getInputStream; &#x2F;&#x2F; B</span><br><span class="line">      access the file;                         &#x2F;&#x2F; C</span><br><span class="line">      send file to s.getOutputStream;          &#x2F;&#x2F; D</span><br><span class="line">   &#125;);</span><br><span class="line">   t.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>There is an overhead when creating a new thread each time. It can be solved by using thread pool.</p>
+<h4 id="4-3-MPI-and-Threading"><a href="#4-3-MPI-and-Threading" class="headerlink" title="4.3 MPI and Threading"></a>4.3 MPI and Threading</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; master thread</span><br><span class="line">&#x2F;&#x2F; threads communicate without network</span><br><span class="line">MPI.INIT()</span><br><span class="line">create worker threads &#x2F;&#x2F; these threads can work in parallel</span><br><span class="line">MPI.SEND() </span><br><span class="line">MPI.RECV()</span><br><span class="line">MPI.REDUCE()</span><br><span class="line">MPI.FINALIZE()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>threading modes:<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>funneled</td>
+<td>all MPI calls are performed by one thread</td>
+</tr>
+<tr>
+<td>serialized</td>
+<td>at most have one MPI call at a time</td>
+</tr>
+<tr>
+<td>multiple</td>
+<td>multiple called at the same time</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h4 id="4-4-Distributed-Actors"><a href="#4-4-Distributed-Actors" class="headerlink" title="4.4 Distributed Actors"></a>4.4 Distributed Actors</h4><p>If we have large numbers of actors, it will be too much to run them all on a single node. </p>
+<p>Solution: put future actors on a new different node. </p>
+<ol>
+<li>Create a configuration file. That tells you for each actor, what the host and port is for that actor to receive messages remotely</li>
+<li>Create remote actors</li>
+<li>Look up remote actors by some kind of logical name</li>
+<li>Messages need to be serialized.</li>
+</ol>
+<h4 id="4-5-Distributed-Reactive-Programming"><a href="#4-5-Distributed-Reactive-Programming" class="headerlink" title="4.5 Distributed Reactive Programming"></a>4.5 Distributed Reactive Programming</h4><p>It’s best to implement distributed service oriented architectures using asynchronous events. A key idea behind this model is to balance the “push“ and “pull“ very efficiently. </p>
+<p>Reactive streams specification:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Flow.Publisher</span><br><span class="line">Flow.Subscriber</span><br><span class="line">Flow.Process</span><br><span class="line">Flow.Subscription</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; publisher</span><br><span class="line">pub &#x3D; new SubmissionPublisher();</span><br><span class="line">pub.subscribe(s1);</span><br><span class="line">pub.subscribe(s2);</span><br><span class="line">pub.submit(...);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; subscriber</span><br><span class="line">&#x2F;&#x2F; each subscriber has to implement onSubscribe and onNext</span><br><span class="line">&#x2F;&#x2F; In this case, only 100 events will be sent at a time onNext will be called for each item. </span><br><span class="line">onSubscribe(sn) &#123;</span><br><span class="line">  sn.req(100);</span><br><span class="line">&#125;</span><br><span class="line">onNext(item)&#123;</span><br><span class="line">  process item</span><br><span class="line">  if(...) sn.req(100); &#x2F;&#x2F; in some condition when you&#39;re ready for the next batch</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">hyangjudy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://hyangjudy.github.io/2020/04/23/PCDPInJava/">https://hyangjudy.github.io/2020/04/23/PCDPInJava/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Parallel/">Parallel</a><a class="post-meta__tags" href="/tags/Concurrent/">Concurrent</a><a class="post-meta__tags" href="/tags/Distributed/">Distributed</a><a class="post-meta__tags" href="/tags/Coursera/">Coursera</a></div><div class="post_share"><div class="social-share" data-image="/images/PCDPInJava/remote-method-invocation.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/img/wechat.jpg" alt="微信"/><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/img/alipay.jpg" alt="支付寶"/><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/2020/04/21/hello-world/"><img class="next_cover lazyload" data-src="/img/post.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Hello World</div></div></a></div></nav></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 By hyangjudy</div><div class="framework-info"><span>Driven </span><a href="https://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
