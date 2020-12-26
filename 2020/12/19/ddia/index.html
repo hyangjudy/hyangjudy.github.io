@@ -81,7 +81,7 @@ function activateLightMode(){
 .justified-gallery img{
   opacity: 1
 }
-</style></noscript><meta name="generator" content="Hexo 4.2.0"></head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.JPG" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">6</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">8</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div></div></div></div><i class="fa fa-arrow-right on" id="toggle-sidebar" aria-hidden="true">     </i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Chapter-2-Data-Models-and-Query-Languages"><span class="toc-number">1.</span> <span class="toc-text">Chapter 2 Data Models and Query Languages</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Document-models"><span class="toc-number">1.1.</span> <span class="toc-text">Document models</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Relational-models"><span class="toc-number">1.2.</span> <span class="toc-text">Relational models</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Document-relational-models"><span class="toc-number">1.3.</span> <span class="toc-text">Document&#x2F;relational models</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Graph-models"><span class="toc-number">1.4.</span> <span class="toc-text">Graph models</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Property-Graphs"><span class="toc-number">1.4.1.</span> <span class="toc-text">Property Graphs</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Query-Languages-for-Data"><span class="toc-number">1.5.</span> <span class="toc-text">Query Languages for Data</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Chapter-3-Storage-and-Retrieval"><span class="toc-number">2.</span> <span class="toc-text">Chapter 3 Storage and Retrieval</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#OLTP-storage-engines"><span class="toc-number">2.1.</span> <span class="toc-text">OLTP storage engines</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Log-structured"><span class="toc-number">2.1.1.</span> <span class="toc-text">Log-structured</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Bitcask"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">Bitcask</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SSTables"><span class="toc-number">2.1.1.2.</span> <span class="toc-text">SSTables</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LSM-tree"><span class="toc-number">2.1.1.3.</span> <span class="toc-text">LSM tree</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Update-in-place"><span class="toc-number">2.1.2.</span> <span class="toc-text">Update-in-place</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#B-Trees"><span class="toc-number">2.1.2.1.</span> <span class="toc-text">B-Trees</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Comparing-B-Trees-and-LSM-Trees"><span class="toc-number">2.1.3.</span> <span class="toc-text">Comparing B-Trees and LSM-Trees</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OLAP-storage-engines"><span class="toc-number">2.2.</span> <span class="toc-text">OLAP storage engines</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Column-Oriented-Storage"><span class="toc-number">2.2.1.</span> <span class="toc-text">Column-Oriented Storage</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#References"><span class="toc-number">3.</span> <span class="toc-text">References:</span></a></li></ol></div></div></div><div id="body-wrap"><div class="post-bg" id="nav" style="background-image: url(/img/post.jpg)"><div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">hyangjudy's blog</a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span></span></div><div id="post-info"><div id="post-title"><div class="posttitle">DDIA</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="Created 2020-12-19 23:41:00"><i class="fa fa-calendar" aria-hidden="true"></i> Created 2020-12-19</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="Updated 2020-12-21 01:06:50"><i class="fa fa-history" aria-hidden="true"></i> Updated 2020-12-21</span></time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Data/">Data</a></span></div><div class="meta-secondline"> </div><div class="meta-thirdline"><span class="post-meta-pv-cv"><i class="fa fa-eye post-meta__icon" aria-hidden="true"> </i><span>Post View:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-commentcount"></span></div></div></div></div><main class="layout_post" id="content-inner"><article id="post"><div id="article-container"><h1 id="Chapter-2-Data-Models-and-Query-Languages"><a href="#Chapter-2-Data-Models-and-Query-Languages" class="headerlink" title="Chapter 2 Data Models and Query Languages"></a>Chapter 2 Data Models and Query Languages</h1><p>Data model is important. It impacts how the software is written and how we think about the problem that we are solving。</p>
+</style></noscript><meta name="generator" content="Hexo 4.2.0"></head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.JPG" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">6</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">8</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div></div></div></div><i class="fa fa-arrow-right on" id="toggle-sidebar" aria-hidden="true">     </i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Chapter-2-Data-Models-and-Query-Languages"><span class="toc-number">1.</span> <span class="toc-text">Chapter 2 Data Models and Query Languages</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Document-models"><span class="toc-number">1.1.</span> <span class="toc-text">Document models</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Relational-models"><span class="toc-number">1.2.</span> <span class="toc-text">Relational models</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Document-relational-models"><span class="toc-number">1.3.</span> <span class="toc-text">Document&#x2F;relational models</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Graph-models"><span class="toc-number">1.4.</span> <span class="toc-text">Graph models</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Property-Graphs"><span class="toc-number">1.4.1.</span> <span class="toc-text">Property Graphs</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Query-Languages-for-Data"><span class="toc-number">1.5.</span> <span class="toc-text">Query Languages for Data</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Chapter-3-Storage-and-Retrieval"><span class="toc-number">2.</span> <span class="toc-text">Chapter 3 Storage and Retrieval</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#OLTP-storage-engines"><span class="toc-number">2.1.</span> <span class="toc-text">OLTP storage engines</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Log-structured"><span class="toc-number">2.1.1.</span> <span class="toc-text">Log-structured</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Bitcask"><span class="toc-number">2.1.1.1.</span> <span class="toc-text">Bitcask</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SSTables"><span class="toc-number">2.1.1.2.</span> <span class="toc-text">SSTables</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LSM-tree"><span class="toc-number">2.1.1.3.</span> <span class="toc-text">LSM tree</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Update-in-place"><span class="toc-number">2.1.2.</span> <span class="toc-text">Update-in-place</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#B-Trees"><span class="toc-number">2.1.2.1.</span> <span class="toc-text">B-Trees</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Comparing-B-Trees-and-LSM-Trees"><span class="toc-number">2.1.3.</span> <span class="toc-text">Comparing B-Trees and LSM-Trees</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OLAP-storage-engines"><span class="toc-number">2.2.</span> <span class="toc-text">OLAP storage engines</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Column-Oriented-Storage"><span class="toc-number">2.2.1.</span> <span class="toc-text">Column-Oriented Storage</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Chapter-4-Encoding-and-decoding"><span class="toc-number">3.</span> <span class="toc-text">Chapter 4 Encoding and decoding</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Formats-for-Encoding-Data"><span class="toc-number">3.1.</span> <span class="toc-text">Formats for Encoding Data</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Language-Specific-Formats"><span class="toc-number">3.1.1.</span> <span class="toc-text">Language-Specific Formats</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JSON-XML-and-CSV"><span class="toc-number">3.1.2.</span> <span class="toc-text">JSON, XML and  CSV</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Binary-encoding"><span class="toc-number">3.1.3.</span> <span class="toc-text">Binary encoding</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Thrift-and-Protocol-Buffers-Two-binary-encoding-formats"><span class="toc-number">3.1.3.1.</span> <span class="toc-text">Thrift and Protocol Buffers (Two binary encoding formats)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Avro-another-binary-encoding-format"><span class="toc-number">3.1.3.2.</span> <span class="toc-text">Avro (another binary encoding format)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Merits-of-Schemas"><span class="toc-number">3.1.4.</span> <span class="toc-text">Merits of Schemas</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Modes-of-Dataflow"><span class="toc-number">3.2.</span> <span class="toc-text">Modes of Dataflow</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#References"><span class="toc-number">4.</span> <span class="toc-text">References:</span></a></li></ol></div></div></div><div id="body-wrap"><div class="post-bg" id="nav" style="background-image: url(/img/post.jpg)"><div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">hyangjudy's blog</a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span></span></div><div id="post-info"><div id="post-title"><div class="posttitle">DDIA</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="Created 2020-12-19 23:41:00"><i class="fa fa-calendar" aria-hidden="true"></i> Created 2020-12-19</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="Updated 2020-12-26 13:43:04"><i class="fa fa-history" aria-hidden="true"></i> Updated 2020-12-26</span></time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Data/">Data</a></span></div><div class="meta-secondline"> </div><div class="meta-thirdline"><span class="post-meta-pv-cv"><i class="fa fa-eye post-meta__icon" aria-hidden="true"> </i><span>Post View:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-commentcount"></span></div></div></div></div><main class="layout_post" id="content-inner"><article id="post"><div id="article-container"><h1 id="Chapter-2-Data-Models-and-Query-Languages"><a href="#Chapter-2-Data-Models-and-Query-Languages" class="headerlink" title="Chapter 2 Data Models and Query Languages"></a>Chapter 2 Data Models and Query Languages</h1><p>Data model is important. It impacts how the software is written and how we think about the problem that we are solving。</p>
 <p>Most applications are built by layering one data model on top of another: each layer hides the complexity of the layers below it by providing a clean data model. </p>
 <h2 id="Document-models"><a href="#Document-models" class="headerlink" title="Document models"></a>Document models</h2><p>Pros:</p>
 <ol>
@@ -298,7 +298,8 @@ function activateLightMode(){
 </tbody></table>
 <h2 id="OLAP-storage-engines"><a href="#OLAP-storage-engines" class="headerlink" title="OLAP storage engines"></a>OLAP storage engines</h2><h3 id="Column-Oriented-Storage"><a href="#Column-Oriented-Storage" class="headerlink" title="Column-Oriented Storage"></a>Column-Oriented Storage</h3><p>The idea behind column-oriented storage is: don’t store all the values from one row together, but store all the values from each column together instead.</p>
 <ul>
-<li>Advantages:<ol>
+<li><p>Advantages:</p>
+<ol>
 <li>Reduce the volume of data needed to load from disk<ol>
 <li>Compression<ul>
 <li>Observation: the data in one column can be repetitive (i.e the number of distinct values in a column is small compared to the number of rows)</li>
@@ -315,12 +316,137 @@ function activateLightMode(){
 <li>Make efficient use of CPU cycles: SIMD operation &amp;&amp; run loop of a column in L1 cache</li>
 </ol>
 </li>
-<li>Downsides:<ol>
+<li><p>Downsides:</p>
+<ol>
 <li>Writing to column-Oriented storage needs to write the whole columns. An alternative way is to write into LSM-trees locally. Querying will look into both LSM-trees and column data on disk.</li>
 </ol>
 </li>
 </ul>
-<h1 id="References"><a href="#References" class="headerlink" title="References:"></a>References:</h1><ol>
+<h1 id="Chapter-4-Encoding-and-decoding"><a href="#Chapter-4-Encoding-and-decoding" class="headerlink" title="Chapter 4 Encoding and decoding"></a>Chapter 4 Encoding and decoding</h1><h2 id="Formats-for-Encoding-Data"><a href="#Formats-for-Encoding-Data" class="headerlink" title="Formats for Encoding Data"></a>Formats for Encoding Data</h2><p>Encoding definition: converts data that is kept in objects, structs etc to bytes</p>
+<h3 id="Language-Specific-Formats"><a href="#Language-Specific-Formats" class="headerlink" title="Language-Specific Formats"></a>Language-Specific Formats</h3><table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Format</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Java</td>
+<td>java.io.Serializable , Kryo</td>
+</tr>
+<tr>
+<td>Ruby</td>
+<td>Marshal</td>
+</tr>
+<tr>
+<td>Python</td>
+<td>Pickle</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Problems:<ol>
+<li>encoding and decoding have to use the same language</li>
+<li>security problems</li>
+<li>often neglect the forward and backward compatibility</li>
+<li>efficiency is low. Java’s built-in serialization is notorious for its bad performance</li>
+</ol>
+</li>
+<li>Conclusion: it’s generally a bad idea to use your language’s built-in encoding </li>
+</ul>
+<h3 id="JSON-XML-and-CSV"><a href="#JSON-XML-and-CSV" class="headerlink" title="JSON, XML and  CSV"></a>JSON, XML and  CSV</h3><p>Textual, human readable </p>
+<ul>
+<li>Problems:<ol>
+<li>verbose: XML</li>
+<li>ambiguity:<ol>
+<li>XML and CSV cannot distinguish between a number and a string that happens to consist of digits</li>
+<li>JSON cannot distinguish integers and floating-point numbers, and it doesn’t </li>
+</ol>
+</li>
+<li>JSON and XML don’t support binary</li>
+<li>optional schema support for XML and JSON. Correct interpretation of data needs schema</li>
+<li>CSV does not have any schema</li>
+</ol>
+</li>
+<li>Conclusion: JSON, XML and CSV are good enought for many purposes</li>
+</ul>
+<h3 id="Binary-encoding"><a href="#Binary-encoding" class="headerlink" title="Binary encoding"></a>Binary encoding</h3><ul>
+<li>Conclusion: more compact or faster to parse</li>
+</ul>
+<h4 id="Thrift-and-Protocol-Buffers-Two-binary-encoding-formats"><a href="#Thrift-and-Protocol-Buffers-Two-binary-encoding-formats" class="headerlink" title="Thrift and Protocol Buffers (Two binary encoding formats)"></a>Thrift and Protocol Buffers (Two binary encoding formats)</h4><ul>
+<li><p>IDL</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">-- IDL of Thrift</span><br><span class="line">struct Person &#123;</span><br><span class="line">  1: required string       userName,</span><br><span class="line">  2: optional i64          favoriteNumber,</span><br><span class="line">  3: optional list&lt;string&gt; interests</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-- IDL of Protocol Buffers</span><br><span class="line">message Person &#123;</span><br><span class="line">    required string user_name       &#x3D; 1;</span><br><span class="line">    optional int64  favorite_number &#x3D; 2;</span><br><span class="line">    repeated string interests       &#x3D; 3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>How they encode</p>
+<ol>
+<li>Thrift has two different binary encoding formats: BinaryProtocal and CompactProtocol. <ol>
+<li>BinaryProtocal: each field has a type annotation to indicate its type. each field has a field tag (the tags can be found in schema definitio). </li>
+</ol>
+<ul>
+<li>See <img src="/" class="lazyload" data-src="/images/ddia/chapter4/Thrift-BinaryProtocol.png"  alt="BinaryProtocal"></li>
+</ul>
+<ol start="2">
+<li>CompactProtocol: packs the field type and tag number into a single byte + use variable length (instead of a full eight bytes) for a integer. </li>
+</ol>
+<ul>
+<li>See<br><img src="/" class="lazyload" data-src="/images/ddia/chapter4/Thrift-CompactProtocol.png"  alt="CompactProtocol"></li>
+</ul>
+</li>
+<li>Protocol Buffer encodes similarly to CompactProtocol</li>
+<li>Note: though each field is marked as required or optional, it won’t affect how the field is encoded. There would be a run time check that fails if the field is not set</li>
+</ol>
+</li>
+<li><p>How they evolve</p>
+<ol>
+<li>Can change field name, since encoded data never refers to field name</li>
+<li>Cannot change/reuse a field’s tag (each field should have a unique tag number)</li>
+<li>Can remove a optional tag</li>
+<li>Can add a new field but not make it required</li>
+<li>Can change data type but the risk is value will lost precision or get truncated. <ol>
+<li>Protocol buffer doesn’t have a list or array datatype but it allows optional field to a repeated field (a multiple value). Thrift has a dedicated list data type but it does not allow evolution from single value to multi </li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+<h4 id="Avro-another-binary-encoding-format"><a href="#Avro-another-binary-encoding-format" class="headerlink" title="Avro (another binary encoding format)"></a>Avro (another binary encoding format)</h4><p>Avro is different from Thrift or Protocol buffer. Why to develop Avro? Thrift is not a good fit for Hadoop.</p>
+<ul>
+<li><p>IDL: one for human editing, one for machine readable</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-- IDL of Avro</span><br><span class="line">record Person &#123;</span><br><span class="line">    string               userName;</span><br><span class="line">    union &#123; null, long &#125; favoriteNumber &#x3D; null;</span><br><span class="line">    array&lt;string&gt;        interests;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>How it encodes</p>
+<ul>
+<li>Different from Thrift/Protocol Buffer: when it encodes, there is nothing to identify fields or data types. To parse the data, go through the fields in the order that they appear in the schema and use the schema to tell the data type of each field. Any mismatch between read and write schemas leads to incorrect decoding.</li>
+<li>See <img src="/" class="lazyload" data-src="/images/ddia/chapter4/Avro-Encoding.png"  alt="Avro-Encoding"></li>
+</ul>
+</li>
+<li><p>How it evolves </p>
+<ol>
+<li>Avro resolves the difference between writer’s schema and the reader’s schema. How the resolution works:<ol>
+<li>matches up the fields by field name</li>
+<li>ignore if a field if appears in the writer’s schema but not in the reader’s schema</li>
+<li>fills a default value if appears in the writer’s schema but not in the reader’s schema</li>
+</ol>
+</li>
+<li>Schema evolution rules<ol>
+<li>forward compatibility means that you can have a new version of the schema as writer and an old version of the schema as reader. </li>
+<li>backward compatibility means that you can have a new version of the schema as reader and an old version as writer.</li>
+</ol>
+</li>
+<li>evolution:<ol>
+<li>rename a field name: is backward compatible but not forward compatible old code doesn’t know new field name</li>
+</ol>
+</li>
+<li>Dynamically generated schemas: if the database schema changes, generate a new Avro schema from the updated database schema and export data. In thrift or protocol buffer, the field flag have be assigned by hand: every time the schema changes, adminstrator have to update the mapping manually</li>
+</ol>
+</li>
+</ul>
+<h3 id="Merits-of-Schemas"><a href="#Merits-of-Schemas" class="headerlink" title="Merits of Schemas"></a>Merits of Schemas</h3><ol>
+<li>more compact than binary JSON variants since they omit field names</li>
+<li>schema is valuable form of documentation</li>
+<li>keep a schema to check forward and backward compatibility </li>
+<li>schema can be generated from statically typed programming code </li>
+</ol>
+<h2 id="Modes-of-Dataflow"><a href="#Modes-of-Dataflow" class="headerlink" title="Modes of Dataflow"></a>Modes of Dataflow</h2><h1 id="References"><a href="#References" class="headerlink" title="References:"></a>References:</h1><ol>
 <li><a href="https://www.youtube.com/playlist?list=PLwdV8xC1EWHrcQbBMqUdEF8ZjZ72n7q03" target="_blank" rel="noopener">https://www.youtube.com/playlist?list=PLwdV8xC1EWHrcQbBMqUdEF8ZjZ72n7q03</a></li>
 <li><a href="https://learning.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/" target="_blank" rel="noopener">https://learning.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/</a></li>
 </ol>
